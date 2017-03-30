@@ -1,0 +1,33 @@
+# depslib dependency file v1.0
+1394982922 source:/home/mike/Desktop/Parallel Primes/fastSieve/fastSieve/clineest.c
+	"clineest.h"
+	"fMath.h"
+	<stddef.h>
+	<time.h>
+	<stdlib.h>
+	<assert.h>
+
+1394986085 /home/mike/Desktop/Parallel Primes/fastSieve/fastSieve/clineest.h
+
+1394986141 /home/mike/Desktop/Parallel Primes/fastSieve/fastSieve/fMath.h
+
+1394981729 source:/home/mike/Desktop/Parallel Primes/fastSieve/fastSieve/fMath.c
+	"fMath.h"
+
+1394986127 source:/home/mike/Desktop/Parallel Primes/fastSieve/fastSieve/main.c
+	<stdio.h>
+	<stdint.h>
+	"clineest.h"
+	"mPrimes.h"
+	<string.h>
+
+1394986149 /home/mike/Desktop/Parallel Primes/fastSieve/fastSieve/mPrimes.h
+
+1394986077 source:/home/mike/Desktop/Parallel Primes/fastSieve/fastSieve/mPrimes.c
+	"mPrimes.h"
+	"clineest.h"
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<sys/timeb.h>
+
