@@ -25,6 +25,7 @@ it supports elementary command line input eg:
 
 -S = a value [1-3] that changes how the primes are tested & calculated. 1 -> Default; 2 -> Most optimiaztions used; 3 -> Some experimental options enabled.
 
+-C to estimate the L2 cache of the system and use it effeciently
 
 # Please take note that it outputs to a file. This can take a very long time and be very large ~1.5GBs
 

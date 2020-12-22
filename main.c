@@ -35,7 +35,7 @@ int main(int argc,char* argv[]){
 	for(i = 1;i<argc;++i)
 		if(strstr(argv[i], "-C")!=NULL){
 			printf("Attempting to find cacheline for Node %i...\n",id);
-			cachesize = get_cache_line(1024*1024);
+			cachesize = get_cache_line(1024*1024*32); //cachelines (L2) are getting big these days
 			 if(cachesize<32768)
 				cachesize = 256*1024;
 			printf("Node %i Cacheline:%i\n\n",id,cachesize);
