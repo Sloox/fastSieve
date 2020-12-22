@@ -27,5 +27,5 @@ it supports elementary command line input eg:
 
 -C to estimate the L2 cache of the system and use it effeciently
 
-# Please take note that it outputs to a file. This can take a very long time and be very large ~1.5GBs
+# Please take note that it outputs to a file. This can take a very long time and be very large ~1.5GB
 
