@@ -19,6 +19,7 @@ Compile by typing `make` in bash and running the resultant `a.out`
 
 As this supports OpenMPI it can be executed like:
 `mpiexec a.out -s 2 -c -v 1 -n 100`
+### Take note that the OpenMPI implementation is not complete and does not calculate primes correctly at present.
 
 it supports elementary command line input eg:
 
