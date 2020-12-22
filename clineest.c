@@ -5,10 +5,9 @@
 #include <time.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <stdio.h>
 
 #define sizeof_array(arr)	(sizeof(arr)/sizeof((arr)[0]))
-
-
 
 struct size_of_data unitfy_data_size(unsigned int sizeInBytes)
 {

@@ -7,6 +7,7 @@
 #include <sys/timeb.h>
 #include <malloc.h>
 
+struct timeb tstarts, tends;//timers
 
 void MPIPrimesdefault(int argc,char* argv[], Number Limit, int CACHESIZE,int id, int p);
 void MPIPrimesMAX(int argc,char* argv[], Number Limit, int CACHESIZE, char vb,int id, int p);
@@ -19,9 +20,7 @@ int main(int argc,char* argv[]){
     char verbose = 0;
     
     Number pLimit = MAX_INT_SIZE; //assume as default
-    
-    
-    
+   
      //MPI
     int id;
     int p;
@@ -31,9 +30,6 @@ int main(int argc,char* argv[]){
     MPI_Init(&argc,&argv);
     MPI_Comm_rank(MPI_COMM_WORLD,&id);
     MPI_Comm_size(MPI_COMM_WORLD,&p);
-    
-    
-    
     
 	int i;
 	for(i = 1;i<argc;++i)
@@ -95,9 +91,7 @@ int main(int argc,char* argv[]){
 void MPIPrimesdefault(int argc,char* argv[], Number Limit, int CACHESIZE,int id, int p){
 	if(id==0)
 		printf("Prime default calc for:%llu numbers to be considered\n\n",Limit);
-    ftime(&tstart);
-    
-    
+    ftime(&tstarts);
     
     //seperate into chunks to calculate
     Number a = (Limit)/(p);
@@ -107,12 +101,10 @@ void MPIPrimesdefault(int argc,char* argv[], Number Limit, int CACHESIZE,int id,
     primesMPIFile(CACHESIZE,from,to,id);
 	
 	
-	ftime(&tend);
+	ftime(&tends);
 	MPI_Barrier(MPI_COMM_WORLD);//stop before finish
 	
-	
-	
-	float diff=((float) (1000.0 * (tend.time - tstart.time) + (tend.millitm - tstart.millitm)))/1000.0;;
+	float diff=((float) (1000.0 * (tends.time - tstarts.time) + (tends.millitm - tstarts.millitm)))/1000.0;;
 	printf("Node %i) Prime Computation complete, time taken:%f\n\n",id,diff);
 	if(id==0){
 		printf("Saving to file...\n");
@@ -136,7 +128,7 @@ void MPIPrimesExperimental(int argc,char* argv[], Number Limit, int CACHESIZE, c
 		
 			
     //timing
-    ftime(&tstart);
+    ftime(&tstarts);
     
     mallopt(M_MXFAST, 1024);//mem size addressing
     
@@ -148,7 +140,7 @@ void MPIPrimesExperimental(int argc,char* argv[], Number Limit, int CACHESIZE, c
     primesMPIFile(CACHESIZE,from,to,id);
 	
 	
-	ftime(&tend);
+	ftime(&tends);
 	
 	 if(vb)
 		printf("\nNode %i)Barrier reached\n",id);
@@ -156,7 +148,7 @@ void MPIPrimesExperimental(int argc,char* argv[], Number Limit, int CACHESIZE, c
 	if(vb)
 		printf("\nNode %i)Barrier left\n\n",id);
 	
-	float diff=((float) (1000.0 * (tend.time - tstart.time) + (tend.millitm - tstart.millitm)))/1000.0;;
+	float diff=((float) (1000.0 * (tends.time - tstarts.time) + (tends.millitm - tstarts.millitm)))/1000.0;;
 	if(vb){
 		printf("Node %i) Prime Computation complete, time taken:%f\n\n",id,diff);
 		printf("Node %i) Calc from:%llu to:%llu\n",id, from, to);
@@ -182,7 +174,7 @@ void MPIPrimesMAX(int argc,char* argv[], Number Limit, int CACHESIZE, char vb,in
 			printf("\nMAX:Aiming to achieve lowest prime calculation time\n");
 			
     //timing
-    ftime(&tstart);
+    ftime(&tstarts);
     
      
     
@@ -194,7 +186,7 @@ void MPIPrimesMAX(int argc,char* argv[], Number Limit, int CACHESIZE, char vb,in
     Number found = primesMPI(CACHESIZE,from,to);
 	
 	
-	ftime(&tend);
+	ftime(&tends);
 	 if(vb)
 		printf("\nNode %i)Barrier reached\n",id);
 	MPI_Barrier(MPI_COMM_WORLD);//stop before finish
@@ -202,7 +194,7 @@ void MPIPrimesMAX(int argc,char* argv[], Number Limit, int CACHESIZE, char vb,in
 		printf("\nNode %i)Barrier left\n\n",id);
 	
 	
-	float diff=((float) (1000.0 * (tend.time - tstart.time) + (tend.millitm - tstart.millitm)))/1000.0;
+	float diff=((float) (1000.0 * (tends.time - tstarts.time) + (tends.millitm - tstarts.millitm)))/1000.0;
 	if(vb){
 		printf("Node %i) Prime Computation complete, time taken:%f\n",id,diff);
 		printf("Node %i) Calc from:%llu to:%llu, Primes found:%llu\n",id, from, to, found);

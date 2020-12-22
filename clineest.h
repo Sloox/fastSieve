@@ -1,10 +1,7 @@
 #ifndef CLINEEST_H_INCLUDED
 #define CLINEEST_H_INCLUDED
 
-
-
 unsigned int estimatecache();
-
 
 struct size_of_data
 {

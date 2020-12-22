@@ -6,6 +6,68 @@
 #include <sys/timeb.h>
 #include <string.h>
 
+struct timeb tstart, tend;//timers
+
+void savetofile(unsigned char ** arr, Number pLimit, int rank, Number start, Number endn){
+	FILE *fp;
+	char buffer[10];
+	snprintf(buffer, sizeof(buffer), "P%i.txt", rank);
+	
+	fp=fopen(buffer, "a+");
+	if(fp == NULL)
+	   return;
+	Number i;
+	
+	for(i=1;i<pLimit;++i)
+		if((*arr)[i])
+			fprintf(fp,"%llu \n",i*2+1+start);
+			
+	fclose(fp);
+}
+
+__inline void SieveFile(Number start, Number endnum, int rank) {
+    // initialize
+    Number blockSize = (endnum - start +1)/2;
+    Number i,j,index,blockstart;
+    unsigned char* isPrime;
+    isPrime = malloc((blockSize+1)* sizeof(unsigned char));
+    memset(isPrime, 1, sizeof(unsigned char)*(blockSize+1));
+
+    // find all non-primes
+    for (i = 3; i*i<endnum; i+=2){
+    
+		if (i >= 9 && i % 3 == 0)
+			continue;
+		if (i >= 25 && i % 5 == 0)
+			continue;
+		if (i >= 49 && i % 7 == 0)
+			continue;
+		if (i >= 121 && i % 11 == 0)
+			continue;
+		if (i >= 169 && i % 13 == 0)
+			continue;
+		if(i >= 17*17 && i%17==0)
+			continue;
+
+        blockstart = ((start+i-1)/i)*i;
+
+        if (blockstart < i*i) //esnure min is reached
+                blockstart = i*i;
+
+        // start value must be odd
+        if ((blockstart & 1) == 0)
+            blockstart += i;
+
+        for (j = blockstart; j <= endnum; j += 2*i){
+            index = j - start;
+            isPrime[index/2] = 0;
+        }
+    }
+ 
+    savetofile(&isPrime,blockSize+1,rank, start,endnum);
+    free(isPrime);
+}
+
 
 void primesMPIFile(Number cachesize, Number start, Number pEnd, int rank){
 	Number from;
@@ -115,65 +177,6 @@ __inline Number SieveCache(Number start, Number endnum) {
     return found;
 }
 
-__inline void SieveFile(Number start, Number endnum, int rank) {
-    // initialize
-    Number blockSize = (endnum - start +1)/2;
-    Number i,j,index,blockstart;
-    unsigned char* isPrime;
-    isPrime = malloc((blockSize+1)* sizeof(unsigned char));
-    memset(isPrime, 1, sizeof(unsigned char)*(blockSize+1));
-
-    // find all non-primes
-    for (i = 3; i*i<endnum; i+=2){
-    
-		if (i >= 9 && i % 3 == 0)
-			continue;
-		if (i >= 25 && i % 5 == 0)
-			continue;
-		if (i >= 49 && i % 7 == 0)
-			continue;
-		if (i >= 121 && i % 11 == 0)
-			continue;
-		if (i >= 169 && i % 13 == 0)
-			continue;
-		if(i >= 17*17 && i%17==0)
-			continue;
-
-        blockstart = ((start+i-1)/i)*i;
-
-        if (blockstart < i*i) //esnure min is reached
-                blockstart = i*i;
-
-        // start value must be odd
-        if ((blockstart & 1) == 0)
-            blockstart += i;
-
-        for (j = blockstart; j <= endnum; j += 2*i){
-            index = j - start;
-            isPrime[index/2] = 0;
-        }
-    }
- 
-    savetofile(&isPrime,blockSize+1,rank, start,endnum);
-    free(isPrime);
-}
-
-void savetofile(unsigned char ** arr, Number pLimit, int rank, Number start, Number endn){
-	FILE *fp;
-	char buffer[10];
-	snprintf(buffer, sizeof(buffer), "P%i.txt", rank);
-	
-	fp=fopen(buffer, "a+");
-	if(fp == NULL)
-	   return;
-	Number i;
-	
-	for(i=1;i<pLimit;++i)
-		if((*arr)[i])
-			fprintf(fp,"%llu \n",i*2+1+start);
-			
-	fclose(fp);
-}
 //debug
 /*static void DebugPrint(int rank) {
     char a;
